@@ -4,5 +4,7 @@
 			"path": "dang-thats-delicious"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"workbench.colorTheme": "Cobalt2",
+	}
 }
