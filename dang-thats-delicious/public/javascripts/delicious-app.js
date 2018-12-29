@@ -4,9 +4,14 @@ import { $, $$ } from './modules/bling';
 import autocomplete from './modules/autocomplete';
 import typeAhead from './modules/typeAhead';
 import makeMap from './modules/map';
+import ajaxHeart from './modules/heart';
 
-autocomplete( $('#address'), $('#lat'), $('#lng') );
+autocomplete($('#address'), $('#lat'), $('#lng'));
 
-typeAhead( $('.search') );
+typeAhead($('.search'));
 
-makeMap( $('#map') );
+makeMap($('#map'));
+
+// Bling js ($$) lets you listen to events on node list
+const heartForms = $$('form.heart');
+heartForms.on('submit', ajaxHeart);

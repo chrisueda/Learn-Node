@@ -1,10 +1,11 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-mongoose.Promise = global.Promise
-const md5 = require('md5')
-const validator = require('validator')
-const mongodbErrorHandler = require('mongoose-mongodb-errors')
-const passportLocalMongoose = require('passport-local-mongoose')
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+mongoose.Promise = global.Promise;
+const md5 = require('md5');
+const validator = require('validator');
+const mongodbErrorHandler = require('mongoose-mongodb-errors');
+const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new Schema({
   email: {
@@ -13,23 +14,26 @@ const userSchema = new Schema({
     lowercase: true, // save in db as lowercase
     trim: true,
     validate: [validator.isEmail, 'Invalid Email Address'],
-    required: 'Please supply an email address'
+    required: 'Please supply an email address',
   },
   name: {
     type: String,
     required: 'Please supply a name',
-    trim: true
+    trim: true,
   },
   resetPasswordToken: String,
-  resetPasswordExpires: Date
-})
+  resetPasswordExpires: Date,
+  hearts: [
+    { type: mongoose.Schema.ObjectId, ref: 'Store' },
+  ],
+});
 
 userSchema.virtual('gravatar').get(function () {
-  const hash = md5(this.email)
-  return `https://gravatar.com/avatar/${hash}?s=200`
-})
+  const hash = md5(this.email);
+  return `https://gravatar.com/avatar/${hash}?s=200`;
+});
 
-userSchema.plugin(passportLocalMongoose, { usernameField: 'email' })
-userSchema.plugin(mongodbErrorHandler) // Add nice error messages.
+userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
+userSchema.plugin(mongodbErrorHandler); // Add nice error messages.
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', userSchema);

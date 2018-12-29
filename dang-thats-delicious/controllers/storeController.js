@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Store = mongoose.model('Store');
+const User = mongoose.model('User');
 const multer = require('multer');
 const jimp = require('jimp');
 const uuid = require('uuid');
@@ -146,4 +147,23 @@ exports.mapStores = async (req, res) => {
 
 exports.mapPage = (req, res) => {
   res.render('map', { title: 'Map' });
+};
+
+exports.heartStore = async (req, res) => {
+  // mongodb has overwritten the toString method in this case.
+  const hearts = req.user.hearts.map(obj => obj.toString());
+  // $pull is mongodb for remove. $addToSet is adding but only if unique.
+  const operator = hearts.includes(req.params.id) ? '$pull' : '$addToSet';
+  const user = await User
+    .findByIdAndUpdate(req.user._id,
+      { [operator]: { hearts: req.params.id } },
+      { new: true }); // returns user after it's been updated.
+  res.json(user);
+};
+
+exports.getHearts = async (req, res) => {
+  const stores = await Store.find({
+    _id: { $in: req.user.hearts }, // find stores that are in the user heart array
+  });
+  res.render('stores', { title: 'Hearted Stores', stores });
 };

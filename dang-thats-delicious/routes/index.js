@@ -63,6 +63,9 @@ router.post(
 );
 
 router.get('/map', storeController.mapPage);
+// Check that they're logged in with authController middleware.
+router.get('/hearts', authController.isLoggedIn, catchErrors(storeController.getHearts));
+
 
 /**
  * API
@@ -70,5 +73,6 @@ router.get('/map', storeController.mapPage);
 
 router.get('/api/search', catchErrors(storeController.searchStores));
 router.get('/api/stores/near', catchErrors(storeController.mapStores));
+router.post('/api/stores/:id/heart', catchErrors(storeController.heartStore));
 
 module.exports = router;
